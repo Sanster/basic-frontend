@@ -1,0 +1,2 @@
+- https://stackoverflow.com/questions/15544645/css3-scale-transform-on-parent-div-but-keeping-constant-size-in-some-of-the-asso
+- https://codepen.io/thebabydino/pen/AgMYbE

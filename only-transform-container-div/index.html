@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    .parent {
+      margin: 2em auto;
+      padding: 1em;
+      width: 20em;
+      background: lightblue;
+    }
+    .child {
+      border: solid 1px;
+      padding: 1em;
+      background: violet;
+    }
+    .parent:hover {
+      transform: scale(2);
+    }
+    .parent:hover .child {
+      transform: scale(0.5);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      height: 800px;
+    }
+  </style>
+  <body>
+    <div class="parent">
+      parent - hover me to see me grow!
+      <div class="child">child - stays the same size</div>
+    </div>
+  </body>
+</html>
