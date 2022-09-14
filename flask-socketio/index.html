@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+      integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript" charset="utf-8">
+      var socket = io();
+      socket.on("connect", function () {
+        socket.emit("connected", { data: "I'm connected!" });
+      });
+
+      socket.on("image", function (data) {
+        console.log(`receive image, ${JSON.stringify(data)}`);
+        var arrayBufferView = new Uint8Array(data["image_bytes"]);
+        const blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+        const imageUrl = URL.createObjectURL(blob);
+        document.getElementById("image").src = imageUrl;
+      });
+
+      function sendMessage() {
+        socket.emit("start");
+      }
+
+      function drawImageToCanvas(image) {
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        canvas
+          .getContext("2d")
+          .drawImage(image, 0, 0, image.width, image.height);
+        return canvas;
+      }
+
+      async function getCanvasBytesAsync(canvas) {
+        return await new Promise((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => resolve(new Uint8Array(reader.result));
+            reader.onerror = () =>
+              reject(new Error("Could not read from blob"));
+            reader.readAsArrayBuffer(blob);
+          });
+        });
+      }
+
+      async function sendImage() {
+        const canvas = drawImageToCanvas(
+          document.getElementById("client-image")
+        );
+        const uint8Data = await getCanvasBytesAsync(canvas);
+        socket.emit("client-image", { image: uint8Data });
+      }
+    </script>
+  </head>
+  <body>
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      "
+    >
+      <h1>WebSocket Image Demo</h1>
+      <button onclick="sendMessage()">
+        Start receive image every 1 second
+      </button>
+      <img
+        id="image"
+        alt="image"
+        style="width: 600px; height: 600px; border: 1px solid black"
+      />
+      <button onclick="sendImage()">Send image to server</button>
+      <img
+        id="client-image"
+        alt="client-image"
+        crossorigin="anonymous"
+        style="width: 600px; height: 600px; border: 1px solid black"
+        src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fww4.sinaimg.cn%2Fmw690%2F68c4467dly1h51pxxq18uj20qo0e87fx.jpg&refer=http%3A%2F%2Fwww.sina.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1665711015&t=8cd64174da62a60671eee880683bc515"
+      />
+    </div>
+  </body>
+</html>

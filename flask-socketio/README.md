@@ -1,0 +1,2 @@
+- Browser receive image every 1 second from flask-socketio server
+- Send image from browser socketio client to flask-socketio server
