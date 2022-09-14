@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid black;
+      pointer-events: none;
+      height: 500px;
+      width: 500px;
+    }
+
+    .child {
+      height: 300px;
+      width: 300px;
+      border: 1px solid lightblue;
+    }
+
+    .auto-pointer-event {
+      pointer-events: auto;
+    }
+
+    .child:hover {
+      background-color: lightgreen;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div>Child div can get hover event</div>
+      <div class="child auto-pointer-event">child</div>
+    </div>
+
+    <div class="container">
+      <div>Child div can <strong>not</strong> get hover event</div>
+      <div class="child">child</div>
+    </div>
+  </body>
+</html>
